@@ -1,24 +1,24 @@
 from random import choice as rc
-
 from app import app
 from models import db, Hero, Power, HeroPower
 
 if __name__ == '__main__':
     with app.app_context():
         print("Clearing db...")
-        Power.query.delete()
+        HeroPower.query.delete()  # Clear HeroPower first to avoid foreign key issues
         Hero.query.delete()
-        HeroPower.query.delete()
+        Power.query.delete()
 
         print("Seeding powers...")
         powers = [
-            Power(name="super strength", description="gives the wielder super-human strengths"),
-            Power(name="flight", description="gives the wielder the ability to fly through the skies at supersonic speed"),
-            Power(name="super human senses", description="allows the wielder to use her senses at a super-human level"),
-            Power(name="elasticity", description="can stretch the human body to extreme lengths"),
+            Power(name="super strength", description="Gives the wielder super-human strength."),
+            Power(name="flight", description="Gives the wielder the ability to fly through the skies at supersonic speed."),
+            Power(name="super human senses", description="Allows the wielder to use her senses at a super-human level."),
+            Power(name="elasticity", description="Can stretch the human body to extreme lengths."),
         ]
 
         db.session.add_all(powers)
+        db.session.commit() 
 
         print("Seeding heroes...")
         heroes = [
@@ -35,16 +35,21 @@ if __name__ == '__main__':
         ]
 
         db.session.add_all(heroes)
+        db.session.commit()  # Commit after adding heroes
 
         print("Adding powers to heroes...")
         strengths = ["Strong", "Weak", "Average"]
         hero_powers = []
         for hero in heroes:
             power = rc(powers)
-            hero_powers.append(
-                HeroPower(hero=hero, power=power, strength=rc(strengths))
+            hero_power = HeroPower(
+                hero_id=hero.id,          
+                power_id=power.id,        
+                strength=rc(strengths)
             )
+            hero_powers.append(hero_power)
+
         db.session.add_all(hero_powers)
-        db.session.commit()
+        db.session.commit()  
 
         print("Done seeding!")

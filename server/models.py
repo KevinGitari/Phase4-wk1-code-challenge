@@ -45,8 +45,8 @@ class HeroPower(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String, nullable=False)
-    hero_id = db.Column(db.Integer, db.ForeignKey('heroes.id'), nullable=False)
-    power_id = db.Column(db.Integer, db.ForeignKey('powers.id'), nullable=False)
+    hero_id = db.Column(db.Integer, db.ForeignKey('heroes.id'))
+    power_id = db.Column(db.Integer, db.ForeignKey('powers.id'))
 
     hero = db.relationship('Hero', back_populates='hero_powers')
     power = db.relationship('Power', back_populates='hero_powers')
