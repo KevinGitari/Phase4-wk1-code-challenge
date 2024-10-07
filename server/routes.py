@@ -14,8 +14,4 @@ def get_powers():
     powers = Power.query.all()
     return jsonify([power.to_dict() for power in powers])
 
-# Add more routes as needed
-# You can define routes for creating, updating, and deleting Heroes and Powers here.
-
-# Register the blueprint
 app.register_blueprint(bp, url_prefix='/api')
